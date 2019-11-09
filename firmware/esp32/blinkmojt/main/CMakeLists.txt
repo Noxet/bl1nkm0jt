@@ -1,0 +1,1 @@
+idf_component_register(SRCS "blinkmojt.c" INCLUDE_DIRS ".")
