@@ -55,11 +55,11 @@ static esp_err_t index_get_handler(httpd_req_t *req)
             char param[32];
             if (httpd_query_key_value(buf, "text", param, sizeof(param)) == ESP_OK) {
                 snprintf(bm_index, sizeof(bm_index), bm_index_base, param);
-            } else {
-                snprintf(bm_index, sizeof(bm_index), bm_index_base, "Enter text");
-            }
+            } 
         }
         free(buf);
+    } else {
+         snprintf(bm_index, sizeof(bm_index), bm_index_base, "N0LL");
     }
 
     /* Set some custom headers */

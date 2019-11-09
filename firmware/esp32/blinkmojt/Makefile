@@ -9,3 +9,6 @@ EXTRA_COMPONENT_DIRS = $(IDF_PATH)/examples/common_components/protocol_examples_
 
 include $(IDF_PATH)/make/project.mk
 
+blinkmojt:
+	python $(BLINKMOJT_PATH)/index/index_gen.py
+	$(MAKE) build
