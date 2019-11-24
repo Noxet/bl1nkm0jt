@@ -9,7 +9,7 @@
 #ifndef BLINKM0JT_H_
 #define BLINKM0JT_H_
 
-#include "spi.h"
+#include "xspi/spi.h"
 
 #include <string.h>
 

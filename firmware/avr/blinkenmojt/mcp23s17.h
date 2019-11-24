@@ -24,12 +24,15 @@
 
 
 // MCP23S17
-#define SPI_SLAVE_ADDR		0x40
-#define SPI_SLAVE_WRITE		0x00
-#define SPI_SLAVE_READ		0x01
+#define MCP_OPCODE			0x40
+#define MCP_WRITE			0x00
+#define MCP_READ			0x01
 // IOCON
 #define HAEN	3
 #define SEQOP	5// TEST pin
-#define TEST PINA7
+#define TEST	PINA7
+
+void mcp23s17_init(void);
+void mcp_write_to_reg(char reg_addr, char data);
 
 #endif /* MCP23S17_H_ */

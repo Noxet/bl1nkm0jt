@@ -7,6 +7,7 @@
 
 
 #include "blinkenmojt.h"
+#include "mcp23s17.h"
 #include "fonts.h"
 
 char bitmap[MAX_MSG_LEN*6 + 10];
@@ -47,11 +48,20 @@ void blinkenmojt_display_msg(led_struct led_bitmap, volatile uint8_t col_0)
 {				
 	uint16_t cols = led_bitmap.array_len;
 	static uint8_t row = 0;
+	
 	/* Set all of the Slave's PORTA (GPA) and PORTB (GPB) pins as input */
-	spi_master_transmit(IODIRA, 0xff);
-	spi_master_transmit(IODIRB, 0xff);
-	/* Set value for Slave's PORTA and PORTB pins */
-	spi_master_transmit(GPIOA,(((led_bitmap.led_msg[col_0 % cols] & (1 << row))/(1 << row)) << 0)
+	mcp_write_to_reg(IODIRA, 0xff);
+	mcp_write_to_reg(IODIRB, 0xff);
+	
+	///* Set all of the MCP23S17 PORTA (GPA) pins as input */
+	//mcp_write_to_reg(IODIRA, 0xff);
+	//
+	///* Set all of the MCP23S17 PORTB (GPB) pins as input */
+	//mcp_write_to_reg(IODIRB, 0xff);
+	
+	
+	/* Set output data pattern (LED column)*/
+	mcp_write_to_reg(GPIOA,	  (((led_bitmap.led_msg[col_0 % cols] & (1 << row))/(1 << row)) << 0)
 							 |(((led_bitmap.led_msg[(col_0 + 1)   % cols] & (1 << row))/(1 << row)) << 1)
 							 |(((led_bitmap.led_msg[(col_0 + 2)   % cols] & (1 << row))/(1 << row)) << 2)
 							 |(((led_bitmap.led_msg[(col_0 + 3)   % cols] & (1 << row))/(1 << row)) << 3)
@@ -59,8 +69,10 @@ void blinkenmojt_display_msg(led_struct led_bitmap, volatile uint8_t col_0)
 							 |(((led_bitmap.led_msg[(col_0 + 5)   % cols] & (1 << row))/(1 << row)) << 5)
 							 |(((led_bitmap.led_msg[(col_0 + 6)   % cols] & (1 << row))/(1 << row)) << 6)
 							 |(((led_bitmap.led_msg[(col_0 + 7)   % cols] & (1 << row))/(1 << row)) << 7));
+							 
+							 
 
-	spi_master_transmit(GPIOB,(((led_bitmap.led_msg[(col_0 + 8)  % cols] & (1 << row))/(1 << row)) << 0)
+	mcp_write_to_reg(GPIOB,(((led_bitmap.led_msg[(col_0 + 8)  % cols] & (1 << row))/(1 << row)) << 0)
 							 |(((led_bitmap.led_msg[(col_0 + 9)  % cols] & (1 << row))/(1 << row)) << 1)
 							 |(((led_bitmap.led_msg[(col_0 + 10) % cols] & (1 << row))/(1 << row)) << 2)
 							 |(((led_bitmap.led_msg[(col_0 + 11) % cols] & (1 << row))/(1 << row)) << 3)
@@ -69,11 +81,12 @@ void blinkenmojt_display_msg(led_struct led_bitmap, volatile uint8_t col_0)
 							 |(((led_bitmap.led_msg[(col_0 + 14) % cols] & (1 << row))/(1 << row)) << 6));
 	/* Open one row only */
 	ROW_PORT = (1 << row);
-	/* Set all of the Slave's PORTA (GPA) and PORTB (GPB) pins as output */
-	spi_master_transmit(IODIRA, 0x00);
-	spi_master_transmit(IODIRB, 0x00);
+	/* Set all of the MCP23S17 PORTA (GPA) and PORTB (GPB) pins as output */
+	mcp_write_to_reg(IODIRA, 0x00);
+	mcp_write_to_reg(IODIRB, 0x00);
 	/* Increment row by 1 if it isn't 7th row */
 	row = (row + 1) % 7;
 	/* Reset column if it has reached its end */
 	col_0 = col_0 % cols;
+	
 }
