@@ -5,6 +5,13 @@ sdkconfig*
 # VSCode
 .vscode
 
+# Atmel files
+.vs/
+Debug/
+*.atsln
+*.cproj
+*.componentinfo.*
+
 # Prerequisites
 *.d
 
