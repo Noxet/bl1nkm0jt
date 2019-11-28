@@ -6,7 +6,7 @@
  */ 
 
 
-#include "timer0.h"
+#include "xtimer/timer0.h"
 
  void timer0_init() {
 	TCCR0B  |= (1 << CS01) | (1 << CS00);	// (64/8e6) * 256 s = 2 ms

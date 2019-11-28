@@ -1,4 +1,4 @@
-#include "spi.h"
+#include "xspi/spi.h"
 
 
 void spi_master_init(void)
@@ -12,26 +12,13 @@ void spi_master_init(void)
 	SPCR |= (1<<SPI2X);
 }
 
-void spi_slave_init(void)
-{
-	/* Enable the MCP23S17 address pins. Disable sequential operation */
-	spi_master_transmit(IOCONA, (1<<HAEN)|(1<<SEQOP));
-	/* Set all of the Slave's PORTA (GPA) pins as output */
-	spi_master_transmit(IODIRA, 0x00);
-	/* Set all of the Slave's PORTB (GPB) pins as output */
-	spi_master_transmit(IODIRB, 0x00);
-	/* Reset output values */
-	spi_master_transmit(GPIOA, 0x00);
-	spi_master_transmit(GPIOB, 0x00);
-}
-
 
 void spi_master_transmit(unsigned char addr, unsigned char data)
 {
 	/* Start communication */
 	SPI_PORT &=~ (1<<SS);
 	/* Tell slave to write data in to register */
-	SPDR = SPI_SLAVE_ADDR | SPI_SLAVE_WRITE;
+	SPDR = 0x40 | 0x0;
 	/* Wait for transmission complete */
 	while(!(SPSR & (1<<SPIF)));
 	/* Select register */
@@ -44,4 +31,23 @@ void spi_master_transmit(unsigned char addr, unsigned char data)
 	while(!(SPSR & (1<<SPIF)));
 	/* Stop communication */
 	SPI_PORT |= (1<<SS);
+}
+
+void spi_master_transmit_byte(char data){
+
+	SPDR = data;
+	while(!(SPSR & (1<<SPIF)));
+	
+}
+
+void spi_set_cs_low() {
+	
+	SPI_PORT &=~ (1<<SS);	
+	
+}
+
+void spi_set_cs_high() {
+	
+	SPI_PORT |= (1<<SS);
+	
 }

@@ -10,10 +10,10 @@
 #include <avr/interrupt.h>
 #include <string.h>
 #include "blinkenmojt.h"
-#include "components/timer0.h"
-#include "components/spi.h"
+#include "xtimer/timer0.h"
+#include "xspi/spi.h"
 #include "mcp23s17.h"
-#include "components/uart.h"
+#include "xuart/uart.h"
 
 // Receive msg to display
 #define STX		0x02	// Start of text
@@ -41,7 +41,7 @@ led_struct led_data;
 int main(void)
 {
 	spi_master_init();
-	spi_slave_init();
+	mcp23s17_init();
 	timer0_init();
 	uart0_init(9600);
 	uart0_enable_rx_int();
