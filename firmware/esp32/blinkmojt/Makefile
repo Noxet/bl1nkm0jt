@@ -6,6 +6,7 @@
 PROJECT_NAME := blinkmojt
 
 EXTRA_COMPONENT_DIRS = $(BLINKMOJT_PATH)/firmware/esp32/components/bm_wifi
+EXTRA_COMPONENT_DIRS += $(BLINKMOJT_PATH)/firmware/esp32/components/uart
 
 include $(IDF_PATH)/make/project.mk
 

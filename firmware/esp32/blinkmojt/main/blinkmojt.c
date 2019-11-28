@@ -13,6 +13,7 @@
 
 #include "index.h"
 #include "blinkmojt/bm_wifi.h"
+#include "xuart/uart.h"
 
 const char *TAG = "bl1nkm0jt";
 
@@ -58,6 +59,7 @@ static esp_err_t index_get_handler(httpd_req_t *req)
             char param[32];
             if (httpd_query_key_value(buf, "text", param, sizeof(param)) == ESP_OK) {
                 snprintf(bm_index, sizeof(bm_index), bm_index_base, param);
+                sq_uart_send(param, strlen(param));
             } 
         }
         free(buf);
@@ -79,6 +81,8 @@ static esp_err_t index_get_handler(httpd_req_t *req)
     if (httpd_req_get_hdr_value_len(req, "Host") == 0) {
         ESP_LOGI(TAG, "Request headers lost");
     }
+
+    sq_uart_send("BAJS\n", 5);
     return ESP_OK;
 }
 
@@ -173,6 +177,7 @@ void app_main()
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     wifi_init();
+    sq_uart_init();
 
     /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
      * and re-start it upon connection.
