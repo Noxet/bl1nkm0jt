@@ -59,7 +59,9 @@ static esp_err_t index_get_handler(httpd_req_t *req)
             char param[32];
             if (httpd_query_key_value(buf, "text", param, sizeof(param)) == ESP_OK) {
                 snprintf(bm_index, sizeof(bm_index), bm_index_base, param);
-                sq_uart_send(param, strlen(param));
+                sq_uart_send("\x02", 1);
+                sq_uart_send((const char *) param, strlen(param));
+                sq_uart_send("\x03", 1);
             } 
         }
         free(buf);
