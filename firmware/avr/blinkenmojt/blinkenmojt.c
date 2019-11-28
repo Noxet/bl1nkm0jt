@@ -11,6 +11,9 @@
 #include "fonts.h"
 
 char bitmap[MAX_MSG_LEN*6 + 10];
+uint8_t debug_col0;
+
+extern volatile uint8_t col0;
 
 led_struct blinkenmojt_conv_msg(unsigned char *rx_msg) 
 {	
@@ -38,7 +41,7 @@ led_struct blinkenmojt_conv_msg(unsigned char *rx_msg)
 		bitmap[10 + i*(5+1) + 5] = 0x00;
 	}
 
-	led_bitmap.array_len = ((msg_size+1)*5)+10;
+	led_bitmap.bitmap_len = ((msg_size)*6)+10;
 	led_bitmap.led_msg = bitmap;
 
 	return led_bitmap;
@@ -46,9 +49,8 @@ led_struct blinkenmojt_conv_msg(unsigned char *rx_msg)
 
 void blinkenmojt_display_msg(led_struct led_bitmap, volatile uint8_t col_0) 
 {				
-	uint16_t cols = led_bitmap.array_len;
+	uint16_t cols = led_bitmap.bitmap_len;
 	static uint8_t row = 0;
-	
 	/* Set all of the Slave's PORTA (GPA) and PORTB (GPB) pins as input */
 	mcp_write_to_reg(IODIRA, 0xff);
 	mcp_write_to_reg(IODIRB, 0xff);
@@ -86,7 +88,8 @@ void blinkenmojt_display_msg(led_struct led_bitmap, volatile uint8_t col_0)
 	mcp_write_to_reg(IODIRB, 0x00);
 	/* Increment row by 1 if it isn't 7th row */
 	row = (row + 1) % 7;
-	/* Reset column if it has reached its end */
-	col_0 = col_0 % cols;
+
+	
+	debug_col0 = col_0;
 	
 }

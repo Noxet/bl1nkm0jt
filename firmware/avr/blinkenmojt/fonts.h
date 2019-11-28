@@ -471,10 +471,11 @@ const unsigned char font[219*5] =
 	s _ _ _ _ _ _ _ _ ,
 
 	s _ X X X X X X X ,
+	s _ _ X _ _ _ _ _ ,
 	s _ _ _ X _ _ _ _ ,
 	s _ _ X _ X _ _ _ ,
 	s _ X _ _ _ X _ _ ,
-	s _ _ _ _ _ _ _ _ ,
+
 
 	s _ _ _ _ _ _ _ _ ,
 	s _ X _ _ _ _ _ X ,

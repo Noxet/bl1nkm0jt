@@ -74,13 +74,21 @@ int main(void)
 ISR(TIMER0_OVF_vect) 
 {
 	ovf_cnt++;
-
-	if (ovf_cnt % 1 == 0)
+	
+	// Refresh rate
+	if (ovf_cnt % 5 == 0)
 		timer0_flag = 1;
 
-	if (ovf_cnt % 30 == 0) {
+	// Text speed
+	if (ovf_cnt == 250) {
 		ovf_cnt = 0;
-		col0++;
+		if (led_data.bitmap_len > col0) {
+			col0++;
+		} else {
+			col0 = 0;
+		}
+		
+		
 	}
 }
 
@@ -116,7 +124,7 @@ ISR(USART0_RX_vect) {
 
 void initial_message()
 {	
-	unsigned char initial_msg[6] = {'P', 'W', 'N', 'E', 'D','\0'};	// WHY '\0'???? ASK NOXET
+	unsigned char initial_msg[2] = {'P','\0'};	// WHY '\0'???? ASK NOXET
 
 	col0 = 0;
 	led_data = blinkenmojt_conv_msg(initial_msg);

@@ -49,8 +49,9 @@
 #define ROW6 PINA6	// TEMP
 
 typedef struct led_struct{
-	uint8_t array_len;
+	uint16_t bitmap_len;
 	unsigned char *led_msg;
+	
 } led_struct;
 
 
