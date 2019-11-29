@@ -1,14 +1,13 @@
 /**
  * @file blinkmojt.c
- * @author Geo, Knalle
+ * @author Geo
+ * @author Knalle
  * @date 11 November 2019
  */ 
 
-
 #include "blinkenmojt.h"
-#include "mcp23s17.h"	/* for mcp_write_to_reg() */
-#include "fonts.h"
 
+/** Bitmap for column data storage (1 char per column) */
 char bitmap[MAX_MSG_LEN*6 + 10];
 
 extern volatile uint8_t col0;
@@ -18,7 +17,7 @@ extern volatile uint8_t col0;
  *
  *  @param	*rx_msg The pointer to message
  *			(char array in ASCII) address.
- *  @return	led_bitmap The data map for LED display.
+ *  @return	The data map for LED display.
  */
 led_struct blinkenmojt_conv_msg(unsigned char *rx_msg) 
 {	
@@ -79,8 +78,7 @@ void blinkenmojt_display_msg(led_struct led_bitmap, volatile uint8_t col_0)
 							 |(((led_bitmap.led_msg[(col_0 + 5)   % cols] & (1 << row))/(1 << row)) << 5)
 							 |(((led_bitmap.led_msg[(col_0 + 6)   % cols] & (1 << row))/(1 << row)) << 6)
 							 |(((led_bitmap.led_msg[(col_0 + 7)   % cols] & (1 << row))/(1 << row)) << 7));
-							 
-							 
+							 					 
 	mcp_write_to_reg(GPIOB,(((led_bitmap.led_msg[(col_0 + 8)  % cols] & (1 << row))/(1 << row)) << 0)
 							 |(((led_bitmap.led_msg[(col_0 + 9)  % cols] & (1 << row))/(1 << row)) << 1)
 							 |(((led_bitmap.led_msg[(col_0 + 10) % cols] & (1 << row))/(1 << row)) << 2)

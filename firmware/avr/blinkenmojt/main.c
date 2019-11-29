@@ -15,27 +15,35 @@
 #include "mcp23s17.h"
 #include "xuart/uart.h"
 
-// Receive msg to display
-#define STX		0x02	// Start of text
-#define ETX		0x03	// End of text
-#define ACK		0x06	// Acknowledgment
-
+// UART communication macros
+/** UART: Start of text. */
+#define STX		0x02
+/** UART: End of text. */
+#define ETX		0x03
+/** UART: Message-recieving state. */
 #define RX_MSG	0xAA
-#define RX_DONE	0xBB
+/** UART: Idle state. */
 #define IDLE	0xCC
 
+/** The counter for timer overflow interrupt. */
 volatile uint16_t ovf_cnt;
+/** The flag that triggers update of the next row. */
 volatile uint8_t timer0_flag;
+/** The index for the bitmap column which
+*	is to be displayed in the first row of the physical LED matrix. */
 volatile uint8_t col0;
 
-unsigned char *disp_msg;
-
+unsigned char *disp_msg;		// IS IT USED?
+/** Received data (UART). */
 volatile unsigned char rx0_data;
+/** Communication state (UART). */
 volatile uint8_t state = IDLE;
-volatile uint8_t msg_index = 0;
+volatile uint8_t msg_index = 0;		// MOVE inside ISR?
+/** The flag that says whether new message has arrived or not. */
 volatile uint8_t new_msg = FALSE;
+/** Placeholder for the received new message. */
 volatile unsigned char the_msg[MAX_MSG_LEN];
-
+/** The LED bitmap data storage. */
 led_struct led_data;
 
 int main(void)
@@ -59,8 +67,8 @@ int main(void)
 			/* Reset index of the first column */
 			col0 = 0;
 			memset(led_data.led_msg,0,(MAX_MSG_LEN*6 + 10));
-			led_data = blinkenmojt_conv_msg((unsigned char *)the_msg);		// FIXED (unsigned char *)	
-			// Has to reset the_msg array when done with it
+			led_data = blinkenmojt_conv_msg((unsigned char *)the_msg);
+			/* Has to reset the_msg array when done with it */
 			memset((unsigned char *)the_msg, 0, strlen(the_msg));
 		}
 		if (timer0_flag == 1) { 
@@ -71,6 +79,10 @@ int main(void)
 }
 
 
+/** @brief	TODO.
+ *
+ *  @param	TIMER0_OVF_vect
+ */
 ISR(TIMER0_OVF_vect) 
 {
 	ovf_cnt++;
@@ -82,16 +94,18 @@ ISR(TIMER0_OVF_vect)
 	// Text speed
 	if (ovf_cnt == 250) {
 		ovf_cnt = 0;
-		if (led_data.bitmap_len > col0) {
-			col0++;
-		} else {
+		col0++;
+		if (led_data.bitmap_len < col0) {
 			col0 = 0;
 		}
-		
-		
 	}
 }
 
+
+/** @brief	TODO.
+ *
+ *  @param	USART0_RX_vect
+ */
 ISR(USART0_RX_vect) {
 
 	rx0_data = UDR0;
@@ -122,9 +136,12 @@ ISR(USART0_RX_vect) {
 	}
 }
 
+/** @brief	Displays initial message.
+ *
+ */
 void initial_message()
 {	
-	unsigned char initial_msg[2] = {'P','\0'};	// WHY '\0'???? ASK NOXET
+	unsigned char initial_msg[6] = {'P','W','N','E','D','\0'};
 
 	col0 = 0;
 	led_data = blinkenmojt_conv_msg(initial_msg);
