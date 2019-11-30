@@ -1,5 +1,4 @@
-/**
- * @file blinkm0jt.h
+/** @file blinkm0jt.h
  * @author Geo
  * @author Knalle
  * @date 11 November 2019

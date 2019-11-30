@@ -1,5 +1,5 @@
-/**
- * @file blinkmojt.c
+/** @file blinkmojt.c
+ * @brief LED matrix display driver
  * @author Geo
  * @author Knalle
  * @date 11 November 2019

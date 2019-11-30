@@ -1,8 +1,8 @@
-/*
- * BlinkTest3.c
- *
- * Created: 2019-11-06 03:48:49
- * Author : ETF
+/**
+ * @file main.c
+ * @author Geo
+ * @author Knalle
+ * @date 6 November 2019
  */ 
 
 
@@ -15,12 +15,11 @@
 #include "mcp23s17.h"
 #include "xuart/uart.h"
 
-// UART communication macros
 /** UART: Start of text. */
 #define STX		0x02
 /** UART: End of text. */
 #define ETX		0x03
-/** UART: Message-recieving state. */
+/** UART: Message-receiving state. */
 #define RX_MSG	0xAA
 /** UART: Idle state. */
 #define IDLE	0xCC
@@ -141,8 +140,8 @@ ISR(USART0_RX_vect) {
  */
 void initial_message()
 {	
-	unsigned char initial_msg[6] = {'P','W','N','E','D','\0'};
-
+	unsigned char initial_msg[10] = {'O','K',',','B','O','O','M','E','R','\0'};
+	/* Reset index of the first column */
 	col0 = 0;
 	led_data = blinkenmojt_conv_msg(initial_msg);
 }
